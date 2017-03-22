@@ -22,13 +22,9 @@ public class User {
 
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
-        sb.append(name);
-        sb.append(password);
-        return sb.toString();
-//        return "User{" +
-//            "name='" + name + '\'' +
-//            ", password='" + password + '\'' +
-//            '}';
+        return "User{" +
+            "name='" + name + '\'' +
+            ", password='" + password + '\'' +
+            '}';
     }
 }
