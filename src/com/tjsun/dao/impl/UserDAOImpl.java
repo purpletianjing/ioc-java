@@ -9,8 +9,4 @@ public class UserDAOImpl implements UserDAO {
         System.out.println(user.toString());
     }
 
-    @Override
-    public void delete() {
-        System.out.println("delete User");
-    }
 }
