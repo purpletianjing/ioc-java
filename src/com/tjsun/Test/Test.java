@@ -1,4 +1,4 @@
-package com.tjsun.controller;
+package com.tjsun.Test;
 
 import com.tjsun.model.User;
 import com.tjsun.service.UserService;
