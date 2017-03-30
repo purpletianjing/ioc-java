@@ -1,4 +1,4 @@
-package com.tjsun.Test;
+package Test;
 
 import com.tjsun.model.User;
 import com.tjsun.service.UserService;
