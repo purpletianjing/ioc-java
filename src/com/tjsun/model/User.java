@@ -1,5 +1,7 @@
 package com.tjsun.model;
 
+import config.Autowired;
+
 public class User {
     private String name;
 
@@ -7,6 +9,7 @@ public class User {
         return name;
     }
 
+    @Autowired
     public void setName(String name) {
         this.name = name;
     }
