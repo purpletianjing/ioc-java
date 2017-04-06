@@ -22,22 +22,16 @@ public class ClassPathXmlApplicationContext implements BeanFactory {
 
         for (Object eleChild : list) {
             Element element = (Element) eleChild;
-            Object object = buildBeans(element);
+            BuildBeans buildBeans = new BuildBeans();
+            Object object = buildBeans.buildBean(element, beans);
 
             String classPath = element.getAttributeValue("class");
+
             Class bean = Class.forName(classPath);
             java.beans.BeanInfo info = java.beans.Introspector.getBeanInfo(bean);
             java.beans.PropertyDescriptor pd[] = info.getPropertyDescriptors();
             invokeSetMethod(element, object, pd);
         }
-    }
-
-    private Object buildBeans(Element element) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        String name = element.getAttributeValue("id");
-        String classPath = element.getAttributeValue("class");
-        Object object = Class.forName(classPath).newInstance();
-        beans.put(name, object);
-        return object;
     }
 
     private void invokeSetMethod(Element element, Object object, PropertyDescriptor[] pd) throws IllegalAccessException, InvocationTargetException {
