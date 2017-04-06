@@ -1,13 +1,10 @@
 package config;
 
-import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -20,19 +17,18 @@ public class ClassPathXmlApplicationContext implements BeanFactory {
 
     public ClassPathXmlApplicationContext() throws JDOMException, IOException, ClassNotFoundException,
         IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException, IntrospectionException {
-        List list = getConfigFileElementList();
+        ReadXmlBean readXmlBean = new ReadXmlBean();
+        List list = readXmlBean.getXmlNodes();
 
         for (Object eleChild : list) {
             Element element = (Element) eleChild;
-
             Object object = buildBeans(element);
 
             String classPath = element.getAttributeValue("class");
             Class bean = Class.forName(classPath);
             java.beans.BeanInfo info = java.beans.Introspector.getBeanInfo(bean);
-
             java.beans.PropertyDescriptor pd[] = info.getPropertyDescriptors();
-            invokeGetMethod(element, object, pd);
+            invokeSetMethod(element, object, pd);
         }
     }
 
@@ -44,7 +40,7 @@ public class ClassPathXmlApplicationContext implements BeanFactory {
         return object;
     }
 
-    private void invokeGetMethod(Element element, Object object, PropertyDescriptor[] pd) throws IllegalAccessException, InvocationTargetException {
+    private void invokeSetMethod(Element element, Object object, PropertyDescriptor[] pd) throws IllegalAccessException, InvocationTargetException {
         for (Element property : element.getChildren("property")) {
             String beanId = property.getAttributeValue("bean");
             Object beanObj = getBean(beanId);
@@ -59,16 +55,16 @@ public class ClassPathXmlApplicationContext implements BeanFactory {
         }
     }
 
-    private List getConfigFileElementList() throws JDOMException, IOException {
-        String configFilePath = "src/config/beans.xml";
-        File file = new File(configFilePath);
-
-        SAXBuilder saxBuilder = new SAXBuilder();
-        Document document = saxBuilder.build(file);
-
-        Element rootElement = document.getRootElement();
-        return (List) rootElement.getChildren();
-    }
+//    private List getConfigFileElementList() throws JDOMException, IOException {
+//        String configFilePath = "src/config/beans.xml";
+//        File file = new File(configFilePath);
+//
+//        SAXBuilder saxBuilder = new SAXBuilder();
+//        Document document = saxBuilder.build(file);
+//
+//        Element rootElement = document.getRootElement();
+//        return (List) rootElement.getChildren();
+//    }
 
     @Override
     public Object getBean(String beanName) {
