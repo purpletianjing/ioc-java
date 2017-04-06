@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ClassPathXmlApplicationContext implements BeanFactory {
-    Map beans = new HashMap<String, Object>();
+    Map beanMap = new HashMap<String, Object>();
 
     public ClassPathXmlApplicationContext() throws JDOMException, IOException, ClassNotFoundException,
         IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException, IntrospectionException {
@@ -21,7 +21,7 @@ public class ClassPathXmlApplicationContext implements BeanFactory {
         for (Object eleChild : list) {
             Element element = (Element) eleChild;
             BuildBeans buildBeans = new BuildBeans();
-            Object object = buildBeans.buildBean(element, beans);
+            Object object = buildBeans.buildBean(element, beanMap);
 
             String classPath = element.getAttributeValue("class");
 
@@ -29,12 +29,12 @@ public class ClassPathXmlApplicationContext implements BeanFactory {
             java.beans.BeanInfo info = java.beans.Introspector.getBeanInfo(bean);
             java.beans.PropertyDescriptor pd[] = info.getPropertyDescriptors();
             InvokeMethod invokeMethod = new InvokeMethod();
-            invokeMethod.invokeSetMethod(element, pd, object, beans);
+            invokeMethod.invokeSetMethod(element, pd, object, beanMap);
         }
     }
 
     @Override
     public Object getBean(String beanName) {
-        return beans.get(beanName);
+        return beanMap.get(beanName);
     }
 }
